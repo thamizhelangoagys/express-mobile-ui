@@ -1,34 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: express-mobile-checkin
-  namespace: express-mobile-checkin
+  name: express-mobile-ui
+  namespace: express-mobile-ui
   labels:
-    app: express-mobile-checkin
+    app: express-mobile-ui
+    version: v1.0.0
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: express-mobile-checkin
+      app: express-mobile-ui
   template:
     metadata:
       labels:
-        app: express-mobile-checkin
+        app: express-mobile-ui
+        version: v1.0.0
     spec:
+      imagePullSecrets:
+      - name: acr-secret
       containers:
-      - name: express-mobile-checkin
-        image: express-mobile-checkin:latest
+      - name: express-mobile-ui
+        image: agilysys.azurecr.io/express-mobile-ui:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
           name: http
         resources:
           requests:
-            memory: "64Mi"
-            cpu: "50m"
-          limits:
             memory: "128Mi"
             cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
         livenessProbe:
           httpGet:
             path: /health
@@ -49,16 +53,18 @@ spec:
         - name: ENVIRONMENT
           valueFrom:
             configMapKeyRef:
-              name: express-mobile-checkin-config
+              name: express-mobile-ui-config
               key: environment
         - name: API_URL
           valueFrom:
             configMapKeyRef:
-              name: express-mobile-checkin-config
+              name: express-mobile-ui-config
               key: api_url
         - name: APP_NAME
           valueFrom:
             configMapKeyRef:
-              name: express-mobile-checkin-config
+              name: express-mobile-ui-config
               key: app_name
+        - name: NODE_ENV
+          value: "production"
       restartPolicy: Always

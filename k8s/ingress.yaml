@@ -1,29 +1,32 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: express-mobile-checkin-ingress
-  namespace: express-mobile-checkin
+  name: express-mobile-ui-ingress
+  namespace: express-mobile-ui
   labels:
-    app: express-mobile-checkin
+    app: express-mobile-ui
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - express-mobile-checkin.example.com
-    secretName: express-mobile-checkin-tls
+    - express-mobile-ui.agilysys.com
+    secretName: express-mobile-ui-tls
   rules:
-  - host: express-mobile-checkin.example.com
+  - host: express-mobile-ui.agilysys.com
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: express-mobile-checkin-service
+            name: express-mobile-ui-service
             port:
               number: 80

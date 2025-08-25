@@ -1,0 +1,178 @@
+trigger:
+  branches:
+    include:
+    - main
+    - develop
+  paths:
+    include:
+    - src/**
+    - package.json
+    - angular.json
+    - Dockerfile
+    - azure-pipelines.yml
+
+pr:
+  branches:
+    include:
+    - main
+    - develop
+  paths:
+    include:
+    - src/**
+    - package.json
+    - angular.json
+    - Dockerfile
+    - azure-pipelines.yml
+
+variables:
+  # Build configuration
+  buildConfiguration: 'production'
+  nodeVersion: '20.x'
+  
+  # Docker configuration
+  dockerfilePath: 'Dockerfile'
+  imageRepository: 'express-mobile-ui'
+  containerRegistry: 'agilysys.azurecr.io'
+  
+  # Kubernetes configuration
+  namespace: 'express-mobile-ui'
+  deploymentName: 'express-mobile-ui'
+  
+  # Environment variables
+  environment: 'production'
+  apiUrl: 'https://api.agilysys.com'
+  appName: 'Express Mobile UI'
+
+stages:
+- stage: Build
+  displayName: 'Build and Test'
+  jobs:
+  - job: Build
+    displayName: 'Build Angular Application'
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+    - task: NodeTool@0
+      displayName: 'Use Node.js $(nodeVersion)'
+      inputs:
+        versionSpec: '$(nodeVersion)'
+    
+    - script: |
+        npm ci
+      displayName: 'Install dependencies'
+    
+    - script: |
+        npm run build -- --configuration=$(buildConfiguration)
+      displayName: 'Build Angular application'
+    
+    - script: |
+        npm test -- --watch=false --browsers=ChromeHeadless --code-coverage
+      displayName: 'Run unit tests'
+      continueOnError: true
+    
+    - task: PublishTestResults@2
+      displayName: 'Publish test results'
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/test-results.xml'
+        mergeTestResults: true
+      condition: succeededOrFailed()
+    
+    - task: PublishCodeCoverageResults@1
+      displayName: 'Publish code coverage'
+      inputs:
+        codeCoverageTool: 'Cobertura'
+        summaryFileLocation: '**/coverage/cobertura-coverage.xml'
+        reportDirectory: '**/coverage'
+      condition: succeededOrFailed()
+    
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish build artifacts'
+      inputs:
+        pathToPublish: 'dist'
+        artifactName: 'drop'
+
+- stage: Docker
+  displayName: 'Build and Push Docker Image'
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - job: DockerBuild
+    displayName: 'Build Docker Image'
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+    - task: Docker@2
+      displayName: 'Build and push image to container registry'
+      inputs:
+        command: 'buildAndPush'
+        repository: '$(imageRepository)'
+        dockerfile: '$(dockerfilePath)'
+        containerRegistry: 'Azure Container Registry'
+        tags: |
+          $(Build.BuildId)
+          latest
+        arguments: '--build-arg BUILD_CONFIGURATION=$(buildConfiguration)'
+
+- stage: Deploy
+  displayName: 'Deploy to Kubernetes'
+  dependsOn: Docker
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - deployment: Deploy
+    displayName: 'Deploy to AKS'
+    environment: 'production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: KubernetesManifest@0
+            displayName: 'Create namespace'
+            inputs:
+              action: 'createSecret'
+              kubernetesServiceConnection: 'aks-service-connection'
+              namespace: '$(namespace)'
+              secretType: 'generic'
+              secretName: 'express-mobile-ui-secret'
+              secretArguments: '--from-literal=environment=$(environment) --from-literal=api-url=$(apiUrl) --from-literal=app-name=$(appName)'
+          
+          - task: KubernetesManifest@0
+            displayName: 'Deploy to Kubernetes'
+            inputs:
+              action: 'deploy'
+              kubernetesServiceConnection: 'aks-service-connection'
+              namespace: '$(namespace)'
+              manifests: 'k8s/*.yaml'
+              containers: '$(containerRegistry)/$(imageRepository):$(Build.BuildId)'
+          
+          - task: KubernetesManifest@0
+            displayName: 'Verify deployment'
+            inputs:
+              action: 'deploy'
+              kubernetesServiceConnection: 'aks-service-connection'
+              namespace: '$(namespace)'
+              manifests: 'k8s/ingress.yaml'
+
+- stage: DeployDev
+  displayName: 'Deploy to Development'
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+  jobs:
+  - deployment: DeployDev
+    displayName: 'Deploy to Development Environment'
+    environment: 'development'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: KubernetesManifest@0
+            displayName: 'Deploy to Development Kubernetes'
+            inputs:
+              action: 'deploy'
+              kubernetesServiceConnection: 'aks-dev-service-connection'
+              namespace: '$(namespace)-dev'
+              manifests: 'k8s/*.yaml'
+              containers: '$(containerRegistry)/$(imageRepository):$(Build.BuildId)'
+              imagePullSecrets: 'acr-secret'

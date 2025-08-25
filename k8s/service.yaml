@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: express-mobile-checkin-service
-  namespace: express-mobile-checkin
+  name: express-mobile-ui-service
+  namespace: express-mobile-ui
   labels:
-    app: express-mobile-checkin
+    app: express-mobile-ui
 spec:
   type: ClusterIP
   ports:
