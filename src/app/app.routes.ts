@@ -127,8 +127,9 @@ export function getRouteConfig(route: any): RouteConfig | null {
  */
 export function getProtectedRoutes(): string[] {
   return featureRoutes
-    .filter(route => route.data?.requiresAuth)
-    .map(route => route.path);
+    .filter(route => route.data && route.data['requiresAuth'])
+    .map(route => route.path)
+    .filter((path): path is string => path !== undefined);
 }
 
 /**
@@ -136,5 +137,5 @@ export function getProtectedRoutes(): string[] {
  */
 export function getRouteTitle(path: string): string {
   const route = featureRoutes.find(r => r.path === path);
-  return route?.data?.title || 'Express Mobile Checkin';
+  return route?.data?.['title'] || 'Express Mobile Checkin';
 }

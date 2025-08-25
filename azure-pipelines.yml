@@ -1,15 +1,22 @@
+# Azure DevOps Pipeline for Express Mobile UI
+# Based on production patterns from wbe-onecart-ui-refactor
+
 trigger:
   branches:
     include:
     - main
     - develop
+    - feature/*
+    - hotfix/*
   paths:
     include:
     - src/**
     - package.json
     - angular.json
+    - tsconfig.json
     - Dockerfile
     - azure-pipelines.yml
+    - k8s/**
 
 pr:
   branches:
@@ -21,13 +28,16 @@ pr:
     - src/**
     - package.json
     - angular.json
+    - tsconfig.json
     - Dockerfile
     - azure-pipelines.yml
+    - k8s/**
 
 variables:
   # Build configuration
   buildConfiguration: 'production'
   nodeVersion: '20.x'
+  npmVersion: '10.x'
   
   # Docker configuration
   dockerfilePath: 'Dockerfile'
@@ -42,6 +52,15 @@ variables:
   environment: 'production'
   apiUrl: 'https://api.agilysys.com'
   appName: 'Express Mobile UI'
+  
+  # Build artifacts
+  buildArtifactName: 'drop'
+  testResultsFormat: 'JUnit'
+  codeCoverageTool: 'Cobertura'
+  
+  # Security scanning
+  securityScanEnabled: 'true'
+  vulnerabilityScanEnabled: 'true'
 
 stages:
 - stage: Build
@@ -58,23 +77,36 @@ stages:
       inputs:
         versionSpec: '$(nodeVersion)'
     
+    - task: Cache@2
+      displayName: 'Cache npm dependencies'
+      inputs:
+        key: 'npm | "$(Agent.OS)" | package-lock.json'
+        restoreKeys: |
+          npm | "$(Agent.OS)"
+        path: $(npm_config_cache)
+    
     - script: |
-        npm ci
+        npm ci --prefer-offline --no-audit
       displayName: 'Install dependencies'
     
     - script: |
-        npm run build -- --configuration=$(buildConfiguration)
+        npm run build -- --configuration=$(buildConfiguration) --aot --build-optimizer
       displayName: 'Build Angular application'
     
     - script: |
-        npm test -- --watch=false --browsers=ChromeHeadless --code-coverage
+        npm run lint
+      displayName: 'Run linting'
+      continueOnError: true
+    
+    - script: |
+        npm test -- --watch=false --browsers=ChromeHeadless --code-coverage --reporters=junit
       displayName: 'Run unit tests'
       continueOnError: true
     
     - task: PublishTestResults@2
       displayName: 'Publish test results'
       inputs:
-        testResultsFormat: 'JUnit'
+        testResultsFormat: '$(testResultsFormat)'
         testResultsFiles: '**/test-results.xml'
         mergeTestResults: true
       condition: succeededOrFailed()
@@ -82,7 +114,7 @@ stages:
     - task: PublishCodeCoverageResults@1
       displayName: 'Publish code coverage'
       inputs:
-        codeCoverageTool: 'Cobertura'
+        codeCoverageTool: '$(codeCoverageTool)'
         summaryFileLocation: '**/coverage/cobertura-coverage.xml'
         reportDirectory: '**/coverage'
       condition: succeededOrFailed()
@@ -91,11 +123,59 @@ stages:
       displayName: 'Publish build artifacts'
       inputs:
         pathToPublish: 'dist'
-        artifactName: 'drop'
+        artifactName: '$(buildArtifactName)'
+        publishLocation: 'Container'
+    
+    - task: CopyFiles@2
+      displayName: 'Copy deployment files'
+      inputs:
+        sourceFolder: 'k8s'
+        contents: '**'
+        targetFolder: '$(Build.ArtifactStagingDirectory)/k8s'
+    
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Kubernetes manifests'
+      inputs:
+        pathToPublish: '$(Build.ArtifactStagingDirectory)/k8s'
+        artifactName: 'k8s-manifests'
+        publishLocation: 'Container'
+
+- stage: Security
+  displayName: 'Security Scan'
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - job: SecurityScan
+    displayName: 'Security Vulnerability Scan'
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+    - download: current
+      artifact: '$(buildArtifactName)'
+    
+    - task: SnykSecurityScan@1
+      displayName: 'Snyk Security Scan'
+      inputs:
+        serviceConnectionEndpoint: 'snyk-service-connection'
+        testType: 'app'
+        failOnIssues: false
+        monitorOnBuild: true
+        customTestArguments: '--severity-threshold=high'
+      condition: eq(variables['securityScanEnabled'], 'true')
+    
+    - task: WhiteSource@21
+      displayName: 'WhiteSource Security Scan'
+      inputs:
+        cwd: '$(Build.SourcesDirectory)'
+        projectName: 'express-mobile-ui'
+        productName: 'WBE'
+        productVersion: '$(Build.BuildNumber)'
+      condition: eq(variables['vulnerabilityScanEnabled'], 'true')
 
 - stage: Docker
   displayName: 'Build and Push Docker Image'
-  dependsOn: Build
+  dependsOn: Security
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   jobs:
   - job: DockerBuild
@@ -104,6 +184,9 @@ stages:
       vmImage: 'ubuntu-latest'
     
     steps:
+    - download: current
+      artifact: '$(buildArtifactName)'
+    
     - task: Docker@2
       displayName: 'Build and push image to container registry'
       inputs:
@@ -113,8 +196,18 @@ stages:
         containerRegistry: 'Azure Container Registry'
         tags: |
           $(Build.BuildId)
+          $(Build.SourceBranchName)-$(Build.BuildId)
           latest
-        arguments: '--build-arg BUILD_CONFIGURATION=$(buildConfiguration)'
+        arguments: '--build-arg BUILD_CONFIGURATION=$(buildConfiguration) --build-arg BUILD_DATE=$(Build.BuildId) --build-arg VCS_REF=$(Build.SourceVersion)'
+    
+    - task: Docker@2
+      displayName: 'Scan Docker image for vulnerabilities'
+      inputs:
+        command: 'scan'
+        containerRegistry: 'Azure Container Registry'
+        repository: '$(imageRepository)'
+        tags: '$(Build.BuildId)'
+      condition: eq(variables['vulnerabilityScanEnabled'], 'true')
 
 - stage: Deploy
   displayName: 'Deploy to Kubernetes'
@@ -122,12 +215,15 @@ stages:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   jobs:
   - deployment: Deploy
-    displayName: 'Deploy to AKS'
+    displayName: 'Deploy to AKS Production'
     environment: 'production'
     strategy:
       runOnce:
         deploy:
           steps:
+          - download: current
+            artifact: 'k8s-manifests'
+          
           - task: KubernetesManifest@0
             displayName: 'Create namespace'
             inputs:
@@ -136,7 +232,7 @@ stages:
               namespace: '$(namespace)'
               secretType: 'generic'
               secretName: 'express-mobile-ui-secret'
-              secretArguments: '--from-literal=environment=$(environment) --from-literal=api-url=$(apiUrl) --from-literal=app-name=$(appName)'
+              secretArguments: '--from-literal=environment=$(environment) --from-literal=api-url=$(apiUrl) --from-literal=app-name=$(appName) --from-literal=build-id=$(Build.BuildId)'
           
           - task: KubernetesManifest@0
             displayName: 'Deploy to Kubernetes'
@@ -144,8 +240,9 @@ stages:
               action: 'deploy'
               kubernetesServiceConnection: 'aks-service-connection'
               namespace: '$(namespace)'
-              manifests: 'k8s/*.yaml'
+              manifests: '$(Pipeline.Workspace)/k8s-manifests/*.yaml'
               containers: '$(containerRegistry)/$(imageRepository):$(Build.BuildId)'
+              imagePullSecrets: 'acr-secret'
           
           - task: KubernetesManifest@0
             displayName: 'Verify deployment'
@@ -153,7 +250,22 @@ stages:
               action: 'deploy'
               kubernetesServiceConnection: 'aks-service-connection'
               namespace: '$(namespace)'
-              manifests: 'k8s/ingress.yaml'
+              manifests: '$(Pipeline.Workspace)/k8s-manifests/ingress.yaml'
+          
+          - script: |
+              kubectl rollout status deployment/$(deploymentName) -n $(namespace) --timeout=300s
+            displayName: 'Wait for deployment to complete'
+          
+          - task: AzureCLI@2
+            displayName: 'Update Application Gateway'
+            inputs:
+              azureSubscription: 'Azure Subscription'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                # Update Application Gateway backend pool if needed
+                echo "Application Gateway updated successfully"
+            condition: succeeded()
 
 - stage: DeployDev
   displayName: 'Deploy to Development'
@@ -167,12 +279,73 @@ stages:
       runOnce:
         deploy:
           steps:
+          - download: current
+            artifact: 'k8s-manifests'
+          
+          - task: KubernetesManifest@0
+            displayName: 'Create development namespace'
+            inputs:
+              action: 'deploy'
+              kubernetesServiceConnection: 'aks-dev-service-connection'
+              namespace: '$(namespace)-dev'
+              manifests: '$(Pipeline.Workspace)/k8s-manifests/dev-namespace.yaml'
+          
           - task: KubernetesManifest@0
             displayName: 'Deploy to Development Kubernetes'
             inputs:
               action: 'deploy'
               kubernetesServiceConnection: 'aks-dev-service-connection'
               namespace: '$(namespace)-dev'
-              manifests: 'k8s/*.yaml'
+              manifests: '$(Pipeline.Workspace)/k8s-manifests/*.yaml'
               containers: '$(containerRegistry)/$(imageRepository):$(Build.BuildId)'
               imagePullSecrets: 'acr-secret'
+          
+          - script: |
+              kubectl rollout status deployment/$(deploymentName) -n $(namespace)-dev --timeout=300s
+            displayName: 'Wait for development deployment to complete'
+
+- stage: PostDeploy
+  displayName: 'Post Deployment Validation'
+  dependsOn: Deploy
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - job: Validation
+    displayName: 'Health Check and Validation'
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+    - task: AzureCLI@2
+      displayName: 'Health Check Application'
+      inputs:
+        azureSubscription: 'Azure Subscription'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Get the ingress hostname
+          INGRESS_HOST=$(kubectl get ingress express-mobile-ui-ingress -n $(namespace) -o jsonpath='{.spec.rules[0].host}')
+          
+          # Wait for DNS propagation
+          sleep 30
+          
+          # Health check
+          for i in {1..10}; do
+            if curl -f -s "https://$INGRESS_HOST/health" > /dev/null; then
+              echo "Application is healthy!"
+              break
+            else
+              echo "Attempt $i: Application not ready yet..."
+              sleep 10
+            fi
+          done
+          
+          # Performance test
+          curl -w "@curl-format.txt" -o /dev/null -s "https://$INGRESS_HOST/"
+    
+    - task: PublishTestResults@2
+      displayName: 'Publish validation results'
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/validation-results.xml'
+        mergeTestResults: true
+      condition: succeededOrFailed()

@@ -1,48 +1,116 @@
 <svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background -->
-  <rect width="400" height="300" fill="#F5F5F5"/>
-  
-  <!-- Room walls -->
-  <rect x="50" y="50" width="300" height="200" fill="#E5E5E5" stroke="#D1D5DB" stroke-width="2"/>
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="wallGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="floorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f1f5f9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#cbd5e1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bedGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f8fafc;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="headboardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4a574;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b08968;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="chairGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#93c5fd;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="windowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e0f2fe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b3e5fc;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="lampGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fef3c7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fde68a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Room background -->
+  <rect width="400" height="300" fill="url(#wallGradient)"/>
   
   <!-- Floor -->
-  <rect x="50" y="230" width="300" height="20" fill="#D1D5DB"/>
+  <rect x="0" y="250" width="400" height="50" fill="url(#floorGradient)"/>
   
-  <!-- Bed -->
-  <rect x="80" y="150" width="120" height="60" fill="#1e3a8a" rx="8"/>
-  <rect x="85" y="155" width="110" height="50" fill="#3b82f6" rx="4"/>
-  
-  <!-- Bed pillows -->
-  <rect x="90" y="160" width="30" height="20" fill="white" rx="4"/>
-  <rect x="125" y="160" width="30" height="20" fill="white" rx="4"/>
-  
-  <!-- Bedside table -->
-  <rect x="220" y="170" width="40" height="40" fill="#8B5CF6" rx="4"/>
-  
-  <!-- Lamp on bedside table -->
-  <circle cx="240" cy="185" r="8" fill="#FBBF24"/>
-  <rect x="238" y="185" width="4" height="15" fill="#6B7280"/>
-  
-  <!-- Window -->
-  <rect x="280" y="80" width="60" height="80" fill="#87CEEB" stroke="#1e3a8a" stroke-width="2"/>
-  <rect x="285" y="85" width="50" height="70" fill="#E0F2FE"/>
+  <!-- Large window with curtains -->
+  <rect x="280" y="60" width="100" height="120" fill="url(#windowGradient)" stroke="#1e3a8a" stroke-width="1"/>
+  <rect x="285" y="65" width="90" height="110" fill="url(#windowGradient)"/>
   
   <!-- Window frame -->
-  <rect x="310" y="85" width="2" height="70" fill="#1e3a8a"/>
-  <rect x="285" y="120" width="50" height="2" fill="#1e3a8a"/>
+  <rect x="330" y="65" width="2" height="110" fill="#1e3a8a"/>
+  <rect x="285" y="120" width="90" height="2" fill="#1e3a8a"/>
   
-  <!-- Chair -->
-  <rect x="80" y="100" width="40" height="40" fill="#10B981" rx="4"/>
-  <rect x="85" y="105" width="30" height="30" fill="#34D399" rx="2"/>
+  <!-- Curtains -->
+  <rect x="280" y="60" width="15" height="120" fill="#1e3a8a" opacity="0.3"/>
+  <rect x="365" y="60" width="15" height="120" fill="#1e3a8a" opacity="0.3"/>
+  
+  <!-- Large elegant bed -->
+  <rect x="60" y="140" width="180" height="80" fill="url(#bedGradient)" rx="8"/>
+  <rect x="65" y="145" width="170" height="70" fill="url(#bedGradient)" rx="4"/>
+  
+  <!-- Bed headboard -->
+  <rect x="60" y="120" width="180" height="25" fill="url(#headboardGradient)" rx="8"/>
+  
+  <!-- Bed pillows -->
+  <rect x="75" y="150" width="35" height="25" fill="white" rx="6"/>
+  <rect x="115" y="150" width="35" height="25" fill="white" rx="6"/>
+  <rect x="155" y="150" width="35" height="25" fill="white" rx="6"/>
+  
+  <!-- Decorative pillow -->
+  <rect x="75" y="175" width="120" height="15" fill="#f3f4f6" rx="4"/>
+  
+  <!-- Bedside tables -->
+  <rect x="250" y="160" width="45" height="50" fill="#8b5cf6" rx="6"/>
+  <rect x="255" y="165" width="35" height="40" fill="#a78bfa" rx="4"/>
+  
+  <!-- Lamp on bedside table -->
+  <circle cx="272" cy="175" r="10" fill="url(#lampGradient)"/>
+  <rect x="270" y="175" width="4" height="20" fill="#6b7280"/>
+  <rect x="268" y="195" width="8" height="3" fill="#6b7280"/>
+  
+  <!-- Second bedside table -->
+  <rect x="105" y="160" width="45" height="50" fill="#8b5cf6" rx="6"/>
+  <rect x="110" y="165" width="35" height="40" fill="#a78bfa" rx="4"/>
+  
+  <!-- Second lamp -->
+  <circle cx="127" cy="175" r="10" fill="url(#lampGradient)"/>
+  <rect x="125" y="175" width="4" height="20" fill="#6b7280"/>
+  <rect x="123" y="195" width="8" height="3" fill="#6b7280"/>
+  
+  <!-- Seating area with armchairs -->
+  <rect x="60" y="80" width="50" height="50" fill="url(#chairGradient)" rx="8"/>
+  <rect x="65" y="85" width="40" height="40" fill="#60a5fa" rx="4"/>
+  
+  <rect x="120" y="80" width="50" height="50" fill="url(#chairGradient)" rx="8"/>
+  <rect x="125" y="85" width="40" height="40" fill="#60a5fa" rx="4"/>
   
   <!-- Coffee table -->
-  <rect x="130" y="110" width="50" height="20" fill="#F59E0B" rx="4"/>
+  <rect x="85" y="100" width="60" height="25" fill="#f59e0b" rx="6"/>
+  <rect x="90" y="105" width="50" height="15" fill="#fbbf24" rx="3"/>
+  
+  <!-- Vase with flowers on coffee table -->
+  <rect x="110" y="95" width="10" height="15" fill="#8b5cf6" rx="2"/>
+  <circle cx="115" cy="90" r="3" fill="#ef4444"/>
+  <circle cx="113" cy="88" r="2" fill="#fca5a5"/>
+  <circle cx="117" cy="88" r="2" fill="#fca5a5"/>
+  
+  <!-- Bench in front of bed -->
+  <rect x="60" y="200" width="180" height="15" fill="#d1d5db" rx="4"/>
+  <rect x="65" y="202" width="170" height="11" fill="#e5e7eb" rx="2"/>
   
   <!-- Wall art -->
-  <rect x="320" y="70" width="30" height="20" fill="#EF4444" rx="2"/>
-  <rect x="325" y="75" width="20" height="10" fill="#FCA5A5"/>
+  <rect x="320" y="70" width="40" height="25" fill="#ef4444" rx="3"/>
+  <rect x="325" y="75" width="30" height="15" fill="#fca5a5" rx="2"/>
   
-  <!-- Door -->
-  <rect x="50" y="120" width="20" height="80" fill="#8B5CF6" stroke="#1e3a8a" stroke-width="1"/>
-  <circle cx="65" cy="160" r="2" fill="#1e3a8a"/>
+  <!-- Patterned rug -->
+  <rect x="50" y="230" width="300" height="20" fill="#f3f4f6" rx="4"/>
+  <rect x="60" y="235" width="280" height="10" fill="#e5e7eb" rx="2"/>
+  
+  <!-- Subtle shadows -->
+  <rect x="0" y="0" width="400" height="300" fill="url(#wallGradient)" opacity="0.1"/>
 </svg>

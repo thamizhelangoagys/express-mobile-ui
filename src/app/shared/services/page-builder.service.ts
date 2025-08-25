@@ -157,7 +157,7 @@ export class PageBuilderService {
             type: 'room-image',
             order: 1,
             config: {
-              imageSrc: 'assets/hotel-room.svg',
+              imageSrc: 'assets/hotel-room.jpg',
               altText: 'Welcome to ALPHA Hotel'
             }
           },
