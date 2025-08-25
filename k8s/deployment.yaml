@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-mobile-checkin
+  namespace: express-mobile-checkin
+  labels:
+    app: express-mobile-checkin
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: express-mobile-checkin
+  template:
+    metadata:
+      labels:
+        app: express-mobile-checkin
+    spec:
+      containers:
+      - name: express-mobile-checkin
+        image: express-mobile-checkin:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: http
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        env:
+        - name: ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: express-mobile-checkin-config
+              key: environment
+        - name: API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: express-mobile-checkin-config
+              key: api_url
+        - name: APP_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: express-mobile-checkin-config
+              key: app_name
+      restartPolicy: Always

@@ -1,0 +1,39 @@
+<svg width="20" height="15" viewBox="0 0 20 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Flag stripes -->
+  <rect width="20" height="1.15" fill="#B22234"/>
+  <rect y="1.15" width="20" height="1.15" fill="white"/>
+  <rect y="2.3" width="20" height="1.15" fill="#B22234"/>
+  <rect y="3.45" width="20" height="1.15" fill="white"/>
+  <rect y="4.6" width="20" height="1.15" fill="#B22234"/>
+  <rect y="5.75" width="20" height="1.15" fill="white"/>
+  <rect y="6.9" width="20" height="1.15" fill="#B22234"/>
+  <rect y="8.05" width="20" height="1.15" fill="white"/>
+  <rect y="9.2" width="20" height="1.15" fill="#B22234"/>
+  <rect y="10.35" width="20" height="1.15" fill="white"/>
+  <rect y="11.5" width="20" height="1.15" fill="#B22234"/>
+  <rect y="12.65" width="20" height="1.15" fill="white"/>
+  <rect y="13.8" width="20" height="1.2" fill="#B22234"/>
+  
+  <!-- Union (blue canton) -->
+  <rect width="8" height="7.5" fill="#3C3B6E"/>
+  
+  <!-- Stars (simplified) -->
+  <circle cx="1" cy="1" r="0.3" fill="white"/>
+  <circle cx="3" cy="1" r="0.3" fill="white"/>
+  <circle cx="5" cy="1" r="0.3" fill="white"/>
+  <circle cx="7" cy="1" r="0.3" fill="white"/>
+  <circle cx="2" cy="2.5" r="0.3" fill="white"/>
+  <circle cx="4" cy="2.5" r="0.3" fill="white"/>
+  <circle cx="6" cy="2.5" r="0.3" fill="white"/>
+  <circle cx="1" cy="4" r="0.3" fill="white"/>
+  <circle cx="3" cy="4" r="0.3" fill="white"/>
+  <circle cx="5" cy="4" r="0.3" fill="white"/>
+  <circle cx="7" cy="4" r="0.3" fill="white"/>
+  <circle cx="2" cy="5.5" r="0.3" fill="white"/>
+  <circle cx="4" cy="5.5" r="0.3" fill="white"/>
+  <circle cx="6" cy="5.5" r="0.3" fill="white"/>
+  <circle cx="1" cy="7" r="0.3" fill="white"/>
+  <circle cx="3" cy="7" r="0.3" fill="white"/>
+  <circle cx="5" cy="7" r="0.3" fill="white"/>
+  <circle cx="7" cy="7" r="0.3" fill="white"/>
+</svg>

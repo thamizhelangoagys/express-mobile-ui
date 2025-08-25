@@ -1,0 +1,62 @@
+<div class="signature-page">
+  <!-- Common Page Header Widget -->
+  <app-page-header-widget
+    pageTitle="Check-in"
+    roomType="Double Deluxe Room"
+    (closeClicked)="goBack()"
+    (viewDetailsClicked)="viewRoomDetails()">
+  </app-page-header-widget>
+
+  <!-- Signature Section -->
+  <div class="signature-section">
+    <div class="signature-header">
+      <h2 class="section-title">Digital Signature</h2>
+      <p class="section-description">Please sign below to complete your check-in process</p>
+    </div>
+
+    <div class="signature-container">
+      <div class="signature-area">
+        <canvas 
+          #signatureCanvas 
+          class="signature-canvas"
+          (mousedown)="startDrawing($event)"
+          (mousemove)="draw($event)"
+          (mouseup)="stopDrawing()"
+          (mouseleave)="stopDrawing()"
+          (touchstart)="startDrawingTouch($event)"
+          (touchmove)="drawTouch($event)"
+          (touchend)="stopDrawing()">
+        </canvas>
+        
+        <div *ngIf="!hasSignature" class="signature-placeholder">
+          <mat-icon class="placeholder-icon">edit</mat-icon>
+          <p class="placeholder-text">Sign here</p>
+        </div>
+      </div>
+
+      <div class="signature-actions">
+        <button 
+          mat-stroked-button 
+          class="clear-btn" 
+          (click)="clearSignature()"
+          [disabled]="!hasSignature">
+          <mat-icon>clear</mat-icon>
+          Clear
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sign & Continue Button -->
+  <div class="continue-section">
+    <button 
+      mat-raised-button 
+      color="primary" 
+      class="continue-btn" 
+      (click)="signAndContinue()"
+      [disabled]="!hasSignature">
+      <mat-icon>check</mat-icon>
+      Sign & Continue
+    </button>
+  </div>
+</div>

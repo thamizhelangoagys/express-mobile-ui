@@ -1,0 +1,52 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="modal-header">
+      <h2 class="modal-title">Confirm Your Details</h2>
+      <button class="close-btn" (click)="closeModal()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Guest Details -->
+    <div class="details-section">
+      <div class="detail-item">
+        <span class="detail-label">Name</span>
+        <span class="detail-value">{{ guestDetails.name }}</span>
+      </div>
+      
+      <div class="detail-item">
+        <span class="detail-label">Email ID</span>
+        <span class="detail-value">{{ guestDetails.email }}</span>
+      </div>
+      
+      <div class="detail-item">
+        <span class="detail-label">Mobile</span>
+        <span class="detail-value">{{ guestDetails.mobile }}</span>
+      </div>
+      
+      <div class="detail-item">
+        <span class="detail-label">Address</span>
+        <span class="detail-value">{{ guestDetails.address }}</span>
+      </div>
+    </div>
+
+    <!-- Privacy Notice -->
+    <div class="privacy-notice">
+      <div class="privacy-icon">
+        <mat-icon>lock</mat-icon>
+      </div>
+      <div class="privacy-text">
+        Your phone number and email will be used to send your room details. Kindly read our 
+        <a href="#" class="privacy-link">privacy policy</a> to know more about it.
+      </div>
+    </div>
+
+    <!-- Confirm Button -->
+    <div class="confirm-section">
+      <button mat-raised-button color="primary" class="confirm-btn" (click)="confirmDetails()">
+        Confirm
+      </button>
+    </div>
+  </div>
+</div>

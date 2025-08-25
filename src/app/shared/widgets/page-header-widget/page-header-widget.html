@@ -1,0 +1,22 @@
+<!-- Header -->
+<div class="page-header" *ngIf="showCloseButton">
+  <h1 class="page-title">{{ pageTitle }}</h1>
+  <button class="close-btn" (click)="onCloseClick()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<!-- Room Information -->
+<div class="room-info-section" *ngIf="showRoomInfo">
+  <div class="room-type">{{ roomType }}</div>
+  <button class="view-details-btn" (click)="onViewDetailsClick()">
+    View Details
+  </button>
+</div>
+
+<!-- Booking Details Modal -->
+<app-booking-details-modal
+  *ngIf="showBookingDetailsModal"
+  [bookingDetails]="bookingDetails"
+  (close)="closeBookingDetailsModal()">
+</app-booking-details-modal>

@@ -1,0 +1,75 @@
+<div class="arrival-time-page">
+  <!-- Common Page Header Widget -->
+  <app-page-header-widget
+    pageTitle="Check-in"
+    roomType="Double Deluxe Room"
+    [bookingDetails]="bookingDetails"
+    (viewDetailsClicked)="viewRoomDetails()">
+  </app-page-header-widget>
+
+  <!-- Expected Arrival Time Section -->
+  <div class="arrival-time-section">
+    <h2 class="section-title">Expected arrival time</h2>
+    
+    <!-- Early Check-in Options -->
+    <div class="early-checkin-section">
+      <p class="section-subtitle">Want to check in early? It's available for an additional fee</p>
+      
+      <div class="time-options">
+        <div 
+          *ngFor="let option of earlyCheckinOptions" 
+          class="time-option"
+          [class.selected]="option.selected"
+          (click)="selectTimeOption(option)">
+          <mat-radio-button 
+            [value]="option.id" 
+            [checked]="option.selected"
+            (change)="selectTimeOption(option)">
+          </mat-radio-button>
+          <div class="option-details">
+            <span class="time">{{ option.time }}</span>
+            <span class="cost">{{ option.cost }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider"></div>
+
+    <!-- Regular Check-in Options -->
+    <div class="regular-checkin-section">
+      <p class="section-subtitle">Regular check-in time</p>
+      
+      <div class="time-options">
+        <div 
+          *ngFor="let option of regularCheckinOptions" 
+          class="time-option"
+          [class.selected]="option.selected"
+          (click)="selectTimeOption(option)">
+          <mat-radio-button 
+            [value]="option.id" 
+            [checked]="option.selected"
+            (change)="selectTimeOption(option)">
+          </mat-radio-button>
+          <div class="option-details">
+            <span class="time">{{ option.time }}</span>
+            <span class="cost">{{ option.cost }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Next Button -->
+  <div class="next-section">
+    <button 
+      mat-raised-button 
+      color="primary" 
+      class="next-btn" 
+      (click)="proceedToNext()"
+      [disabled]="!hasSelection()">
+      Next
+    </button>
+  </div>
+</div>

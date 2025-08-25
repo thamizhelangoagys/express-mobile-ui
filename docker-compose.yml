@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  express-mobile-checkin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - ENVIRONMENT=development
+      - API_URL=http://localhost:3000
+      - APP_NAME=Express Mobile Checkin
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.express-mobile-checkin.rule=Host(`localhost`)"
+      - "traefik.http.routers.express-mobile-checkin.entrypoints=web"

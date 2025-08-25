@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: express-mobile-checkin-service
+  namespace: express-mobile-checkin
+  labels:
+    app: express-mobile-checkin
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  selector:
+    app: express-mobile-checkin

@@ -1,0 +1,48 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#F5F5F5"/>
+  
+  <!-- Room walls -->
+  <rect x="50" y="50" width="300" height="200" fill="#E5E5E5" stroke="#D1D5DB" stroke-width="2"/>
+  
+  <!-- Floor -->
+  <rect x="50" y="230" width="300" height="20" fill="#D1D5DB"/>
+  
+  <!-- Bed -->
+  <rect x="80" y="150" width="120" height="60" fill="#1e3a8a" rx="8"/>
+  <rect x="85" y="155" width="110" height="50" fill="#3b82f6" rx="4"/>
+  
+  <!-- Bed pillows -->
+  <rect x="90" y="160" width="30" height="20" fill="white" rx="4"/>
+  <rect x="125" y="160" width="30" height="20" fill="white" rx="4"/>
+  
+  <!-- Bedside table -->
+  <rect x="220" y="170" width="40" height="40" fill="#8B5CF6" rx="4"/>
+  
+  <!-- Lamp on bedside table -->
+  <circle cx="240" cy="185" r="8" fill="#FBBF24"/>
+  <rect x="238" y="185" width="4" height="15" fill="#6B7280"/>
+  
+  <!-- Window -->
+  <rect x="280" y="80" width="60" height="80" fill="#87CEEB" stroke="#1e3a8a" stroke-width="2"/>
+  <rect x="285" y="85" width="50" height="70" fill="#E0F2FE"/>
+  
+  <!-- Window frame -->
+  <rect x="310" y="85" width="2" height="70" fill="#1e3a8a"/>
+  <rect x="285" y="120" width="50" height="2" fill="#1e3a8a"/>
+  
+  <!-- Chair -->
+  <rect x="80" y="100" width="40" height="40" fill="#10B981" rx="4"/>
+  <rect x="85" y="105" width="30" height="30" fill="#34D399" rx="2"/>
+  
+  <!-- Coffee table -->
+  <rect x="130" y="110" width="50" height="20" fill="#F59E0B" rx="4"/>
+  
+  <!-- Wall art -->
+  <rect x="320" y="70" width="30" height="20" fill="#EF4444" rx="2"/>
+  <rect x="325" y="75" width="20" height="10" fill="#FCA5A5"/>
+  
+  <!-- Door -->
+  <rect x="50" y="120" width="20" height="80" fill="#8B5CF6" stroke="#1e3a8a" stroke-width="1"/>
+  <circle cx="65" cy="160" r="2" fill="#1e3a8a"/>
+</svg>

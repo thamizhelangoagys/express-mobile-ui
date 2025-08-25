@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: express-mobile-checkin
+  labels:
+    name: express-mobile-checkin
+    app: express-mobile-checkin

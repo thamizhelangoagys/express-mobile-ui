@@ -1,0 +1,165 @@
+<div class="checkin-details-page">
+  <!-- Header -->
+  <div class="page-header">
+    <h1 class="page-title">Check-in</h1>
+    <button class="close-btn" (click)="goBack()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Booking Details Section -->
+  <div class="section-card">
+    <h2 class="section-title">Booking details</h2>
+    <div class="booking-content">
+      <div class="room-info">
+        <div class="room-image">
+          <img [src]="bookingDetails.roomImage" [alt]="bookingDetails.roomType">
+        </div>
+        <div class="room-details">
+          <h3 class="room-type">{{ bookingDetails.roomType }}</h3>
+          <div class="booking-info">
+            <div class="info-item">
+              <mat-icon class="info-icon">calendar_today</mat-icon>
+              <span>{{ bookingDetails.checkInDate }} - {{ bookingDetails.checkOutDate }} ({{ bookingDetails.nights }} nights)</span>
+            </div>
+            <div class="info-item">
+              <mat-icon class="info-icon">group</mat-icon>
+              <span>{{ bookingDetails.guests }} Guests</span>
+            </div>
+            <div class="info-item">
+              <mat-icon class="info-icon">business</mat-icon>
+              <span>{{ bookingDetails.tower }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="confirmation-number">
+        <span class="label">Confirmation number</span>
+        <div class="number-container">
+          <span class="number">{{ bookingDetails.confirmationNumber }}</span>
+          <button class="copy-btn" (click)="copyConfirmationNumber()">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Guest Details Section -->
+  <div class="section-card">
+    <h2 class="section-title">Guest details ({{ guests.length }} of {{ guests.length }})</h2>
+    <div class="guests-list">
+      <div *ngFor="let guest of guests" class="guest-item">
+        <div class="guest-info">
+          <div class="guest-header">
+            <h3 class="guest-name">{{ guest.name }}</h3>
+            <mat-chip *ngIf="guest.isPrimary" class="primary-chip" color="primary" selected>
+              Primary Guest
+            </mat-chip>
+          </div>
+          <div *ngIf="guest.email" class="guest-email">{{ guest.email }}</div>
+          <div *ngIf="guest.phone" class="guest-phone">{{ guest.phone }}</div>
+          <div *ngIf="!guest.isPrimary" class="charges-allowed">Charges allowed</div>
+        </div>
+        <div class="guest-actions">
+          <button *ngIf="!guest.isPrimary" class="action-btn delete-btn" (click)="deleteGuest(guest)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button class="action-btn edit-btn" (click)="editGuest(guest)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Special Requests Section -->
+  <div class="section-card">
+    <div class="special-requests-header">
+      <span class="section-title">Add Special Requests</span>
+      <button class="add-btn" (click)="addSpecialRequest()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Authorization Amount Section -->
+  <div class="section-card">
+    <div class="authorization-header">
+      <span class="section-title">Authorization amount</span>
+      <button class="view-details-btn" (click)="viewAuthorizationDetails()">
+        View Details
+      </button>
+    </div>
+    <div class="authorization-amount">
+      <span class="amount">${{ getFormattedAmount() }}</span>
+    </div>
+    <div class="card-info">
+      <span class="card-text">Balance will settle to card ending in {{ bookingDetails.cardEnding }}</span>
+      <div class="card-logo">
+        <img [src]="getCardLogo(bookingDetails.cardType)" [alt]="bookingDetails.cardType">
+      </div>
+    </div>
+  </div>
+
+  <!-- Comments Section -->
+  <div class="section-card">
+    <h2 class="section-title">Additional Comments</h2>
+    <div class="comments-section">
+      <mat-form-field appearance="outline" class="comments-field">
+        <mat-label>Add any special requests, preferences, or comments</mat-label>
+        <textarea 
+          matInput 
+          [(ngModel)]="userComments" 
+          rows="4" 
+          placeholder="e.g., Late check-in, room preferences, accessibility needs, dietary restrictions, or any other special requests..."
+          maxlength="500">
+        </textarea>
+        <mat-hint align="end">{{ userComments.length }}/500</mat-hint>
+        <mat-icon matSuffix>comment</mat-icon>
+      </mat-form-field>
+      
+      <div class="quick-requests" *ngIf="!userComments">
+        <p class="quick-requests-label">Quick requests:</p>
+        <div class="quick-request-chips">
+          <mat-chip 
+            *ngFor="let request of quickRequests" 
+            class="quick-request-chip"
+            (click)="addQuickRequest(request)">
+            {{ request }}
+          </mat-chip>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Continue Button -->
+  <div class="continue-section">
+    <button mat-raised-button color="primary" class="continue-btn" (click)="continueCheckin()">
+      Continue
+    </button>
+  </div>
+</div>
+
+<!-- Rate Breakdown Modal -->
+<app-rate-breakdown-modal
+  *ngIf="showRateBreakdownModal"
+  [rateBreakdown]="rateBreakdown"
+  (close)="closeRateBreakdownModal()">
+</app-rate-breakdown-modal>
+
+<!-- Confirm Details Modal -->
+<app-confirm-details-modal
+  *ngIf="showConfirmDetailsModal"
+  [guestDetails]="guestDetails"
+  (close)="closeConfirmDetailsModal()"
+  (confirm)="confirmDetails()">
+</app-confirm-details-modal>
+
+<!-- Edit Guest Modal -->
+<app-edit-guest-modal
+  *ngIf="showEditGuestModal && currentGuest"
+  [guest]="currentGuest"
+  (save)="saveGuestChanges($event)"
+  (close)="closeEditGuestModal()">
+</app-edit-guest-modal>

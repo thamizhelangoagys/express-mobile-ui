@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: express-mobile-checkin-config
+  namespace: express-mobile-checkin
+  labels:
+    app: express-mobile-checkin
+data:
+  # Environment-specific configuration
+  environment: "production"
+  api_url: "https://api.example.com"
+  app_name: "Express Mobile Checkin"

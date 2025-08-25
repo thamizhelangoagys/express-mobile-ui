@@ -1,0 +1,183 @@
+<div class="hotel-checkin-page">
+  <!-- Room Image Section -->
+  <div class="room-image-section">
+    <div class="room-image">
+      <img src="assets/hotel-room.svg" alt="Double Deluxe Room">
+    </div>
+  </div>
+
+  <!-- Room Details Card -->
+  <div class="room-details-card">
+    <div class="booking-id">#AC56897</div>
+    <h2 class="room-type">Double Deluxe Room</h2>
+    <div class="booking-dates">
+      <mat-icon class="calendar-icon">calendar_today</mat-icon>
+      <span>Dec 24, 2025 - Dec 27, 2025 (3 nights)</span>
+    </div>
+    <button mat-raised-button color="primary" class="checkin-btn" (click)="startCheckin()">
+      Start Check-In
+    </button>
+  </div>
+
+  <!-- Digital Key Card -->
+  <div class="digital-key-card">
+    <div class="card-content">
+      <div class="card-info">
+        <h3 class="card-title">Digital Key</h3>
+        <p class="card-description">Use your phone to unlock your room no lines, no hassle.</p>
+        <button mat-stroked-button class="know-more-btn">Know More</button>
+      </div>
+      <div class="card-icon">
+        <div class="phone-icon">
+          <mat-icon class="phone">smartphone</mat-icon>
+          <mat-icon class="key">vpn_key</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weather Card -->
+  <div class="weather-card">
+    <div class="card-content">
+      <div class="card-info">
+        <h3 class="card-title">Local Weather</h3>
+        <div class="weather-info">
+          <div class="temperature">29°C</div>
+          <div class="condition">Cloudy</div>
+          <div class="location">Alpharetta, Georgia</div>
+        </div>
+      </div>
+      <div class="card-icon">
+        <div class="weather-icon">
+          <mat-icon class="sun">wb_sunny</mat-icon>
+          <mat-icon class="cloud">cloud</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What to Expect Section -->
+  <div class="what-to-expect-section">
+    <h3 class="section-title">What to Expect?</h3>
+    <div class="expectations-grid">
+      <!-- Breakfast & Dining Card -->
+      <div class="expectation-card">
+        <div class="card-image">
+          <div class="breakfast-image">
+            <mat-icon class="breakfast-icon">restaurant</mat-icon>
+            <mat-icon class="coffee-icon">local_cafe</mat-icon>
+            <mat-icon class="food-icon">cake</mat-icon>
+          </div>
+        </div>
+        <div class="card-content">
+          <h4 class="card-title">Breakfast & Dining</h4>
+          <p class="card-description">Free Continental Breakfast (7 - 10 AM)</p>
+        </div>
+      </div>
+
+      <!-- Wellness Card -->
+      <div class="expectation-card">
+        <div class="card-image">
+          <div class="wellness-image">
+            <mat-icon class="pool-icon">pool</mat-icon>
+            <mat-icon class="fitness-icon">fitness_center</mat-icon>
+            <mat-icon class="spa-icon">spa</mat-icon>
+          </div>
+        </div>
+        <div class="card-content">
+          <h4 class="card-title">Wellness</h4>
+          <p class="card-description">24/7 Fitness Center & Swimming Pool</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Check-in Form Modal -->
+  <div class="modal-overlay" *ngIf="showCheckinForm" (click)="closeCheckinForm()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Complete Check-In</h3>
+        <button class="close-btn" (click)="closeCheckinForm()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      
+      <form [formGroup]="checkinForm" (ngSubmit)="onSubmit()" class="checkin-form">
+        <div class="form-section">
+          <h4 class="section-title">
+            <mat-icon class="section-icon">person</mat-icon>
+            Guest Information
+          </h4>
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Full Name</mat-label>
+            <input matInput formControlName="guestName" required>
+            <mat-error *ngIf="checkinForm.get('guestName')?.hasError('required')">
+              Full name is required
+            </mat-error>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Email Address</mat-label>
+            <input matInput type="email" formControlName="email" required>
+            <mat-error *ngIf="checkinForm.get('email')?.hasError('required')">
+              Email is required
+            </mat-error>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="phone" required>
+            <mat-error *ngIf="checkinForm.get('phone')?.hasError('required')">
+              Phone number is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-section">
+          <h4 class="section-title">
+            <mat-icon class="section-icon">schedule</mat-icon>
+            Check-in Time
+          </h4>
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Select check-in time</mat-label>
+            <input matInput type="datetime-local" formControlName="checkinTime" required>
+            <mat-icon matSuffix>schedule</mat-icon>
+            <mat-error *ngIf="checkinForm.get('checkinTime')?.hasError('required')">
+              Check-in time is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-section">
+          <h4 class="section-title">
+            <mat-icon class="section-icon">note</mat-icon>
+            Special Requests (Optional)
+          </h4>
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Any special requests or preferences</mat-label>
+            <textarea matInput formControlName="specialRequests" rows="3" 
+                      placeholder="e.g., Late check-in, room preferences, accessibility needs..."></textarea>
+            <mat-icon matSuffix>note</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-stroked-button type="button" class="cancel-btn" (click)="closeCheckinForm()">
+            Cancel
+          </button>
+          <button mat-raised-button 
+                  color="primary" 
+                  type="submit" 
+                  [disabled]="isSubmitting || checkinForm.invalid"
+                  class="submit-btn">
+            <div class="btn-content">
+              <mat-spinner *ngIf="isSubmitting" diameter="20" class="btn-spinner"></mat-spinner>
+              <mat-icon *ngIf="!isSubmitting">check</mat-icon>
+              <span>{{ isSubmitting ? 'Processing...' : 'Complete Check-In' }}</span>
+            </div>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

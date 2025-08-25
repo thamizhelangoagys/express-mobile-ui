@@ -1,0 +1,80 @@
+<div class="terms-conditions-page">
+  <!-- Common Page Header Widget -->
+  <app-page-header-widget
+    pageTitle="Check-in"
+    roomType="Double Deluxe Room"
+    (viewDetailsClicked)="viewRoomDetails()">
+  </app-page-header-widget>
+
+  <!-- Terms and Conditions Section -->
+  <div class="terms-section">
+    <div class="terms-header">
+      <h2 class="section-title">Terms and Conditions</h2>
+      <p class="section-description">Please read and agree to the terms below</p>
+    </div>
+
+    <div class="terms-content">
+      <div 
+        #termsScroll
+        class="terms-scroll"
+        (scroll)="onScroll($event)">
+        <h3>Hotel Check-in Terms and Conditions</h3>
+        
+        <h4>1. Check-in Requirements</h4>
+        <p>All guests must present a valid government-issued photo ID and the credit card used for booking at check-in. The name on the ID must match the name on the reservation.</p>
+        
+        <h4>2. Age Requirements</h4>
+        <p>Guests must be at least 18 years old to check in. Guests under 18 must be accompanied by a parent or legal guardian.</p>
+        
+        <h4>3. Payment and Authorization</h4>
+        <p>We will authorize your credit card for the full amount of your stay plus incidentals. The authorization will be released within 3-5 business days after checkout, depending on your bank.</p>
+        
+        <h4>4. Early Check-in</h4>
+        <p>Early check-in is subject to availability and may incur additional fees. Standard check-in time is 3:00 PM.</p>
+        
+        <h4>5. Late Check-in</h4>
+        <p>If you plan to arrive after 11:00 PM, please contact the hotel directly to arrange late check-in.</p>
+        
+        <h4>6. Room Occupancy</h4>
+        <p>Maximum occupancy is 2 adults and 2 children per room. Additional guests may require an additional room.</p>
+        
+        <h4>7. Smoking Policy</h4>
+        <p>All rooms are non-smoking. Smoking is only permitted in designated outdoor areas. A $250 cleaning fee will be charged for smoking in rooms.</p>
+        
+        <h4>8. Pet Policy</h4>
+        <p>Pets are not allowed in the hotel. Service animals are welcome with proper documentation.</p>
+        
+        <h4>9. Cancellation Policy</h4>
+        <p>Cancellations must be made 24 hours prior to check-in to avoid a one-night charge. No-shows will be charged the full amount of the reservation.</p>
+        
+        <h4>10. Hotel Policies</h4>
+        <p>Guests must comply with all hotel policies and local laws. The hotel reserves the right to refuse service to anyone.</p>
+        
+        <h4>11. Liability</h4>
+        <p>The hotel is not responsible for lost, stolen, or damaged personal property. Guests are responsible for any damage to hotel property.</p>
+        
+        <h4>12. Privacy Policy</h4>
+        <p>Your personal information will be used only for the purposes of your stay and will not be shared with third parties without your consent.</p>
+        
+        <h4>13. Digital Key</h4>
+        <p>By using our digital key service, you agree to keep your mobile device secure and report any issues immediately.</p>
+        
+        <h4>14. Contact Information</h4>
+        <p>For questions or concerns, please contact the front desk at (555) 123-4567 or email us at info@alphahotel.com.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Agree and Next Button -->
+  <div class="agree-section">
+    <button 
+      mat-raised-button 
+      color="primary" 
+      class="agree-btn" 
+      (click)="agreeAndProceed()"
+      [disabled]="!hasScrolledToBottom">
+      <mat-icon>check</mat-icon>
+      {{ hasScrolledToBottom ? 'Agree and Next' : 'Please read all terms first' }}
+    </button>
+  </div>
+</div>

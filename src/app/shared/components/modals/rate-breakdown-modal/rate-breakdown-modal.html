@@ -1,0 +1,47 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="modal-header">
+      <h2 class="modal-title">Rate Breakdown</h2>
+      <button class="close-btn" (click)="closeModal()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Information Box -->
+    <div class="info-box">
+      <div class="info-icon">
+        <mat-icon>info</mat-icon>
+      </div>
+      <div class="info-text">
+        Incidentals is just a hold and any unused amount will be released at checkout.
+      </div>
+    </div>
+
+    <!-- Rate Items -->
+    <div class="rate-items">
+      <div *ngFor="let item of rateBreakdown.items" class="rate-item">
+        <div class="item-details">
+          <span class="item-description">{{ item.description }}</span>
+          <span *ngIf="item.date" class="item-date">{{ item.date }}</span>
+        </div>
+        <span class="item-amount">${{ item.amount.toFixed(2) }}</span>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider"></div>
+
+    <!-- Totals -->
+    <div class="totals">
+      <div class="total-item">
+        <span class="total-label">Sub Total (Incl. Taxes)</span>
+        <span class="total-amount">${{ rateBreakdown.subtotal.toFixed(2) }}</span>
+      </div>
+      <div class="total-item grand-total">
+        <span class="total-label">Grand Total</span>
+        <span class="total-amount">${{ rateBreakdown.grandTotal.toFixed(2) }}</span>
+      </div>
+    </div>
+  </div>
+</div>

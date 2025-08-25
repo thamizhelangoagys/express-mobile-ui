@@ -1,0 +1,11 @@
+<svg width="40" height="24" viewBox="0 0 40 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="40" height="24" rx="4" fill="#006FCF"/>
+  
+  <!-- AMEX text -->
+  <text x="20" y="14" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">AMEX</text>
+  
+  <!-- Centurion icon (simplified) -->
+  <circle cx="8" cy="12" r="3" fill="white"/>
+  <circle cx="8" cy="12" r="1.5" fill="#006FCF"/>
+</svg>

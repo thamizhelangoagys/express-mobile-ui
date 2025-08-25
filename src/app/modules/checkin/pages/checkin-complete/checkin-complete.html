@@ -1,0 +1,78 @@
+<div class="checkin-complete-page">
+  <!-- Common Page Header Widget -->
+  <app-page-header-widget
+    pageTitle="Check-in Complete"
+    roomType="Double Deluxe Room"
+    [bookingDetails]="bookingDetails"
+    (viewDetailsClicked)="viewRoomDetails()">
+  </app-page-header-widget>
+
+  <!-- Success Message -->
+  <div class="success-section">
+    <div class="success-icon">
+      <mat-icon>check_circle</mat-icon>
+    </div>
+    <h2 class="success-title">Check-in Successful!</h2>
+    <p class="success-description">Your check-in process has been completed successfully. You can now proceed with the next steps.</p>
+  </div>
+
+  <!-- Next Steps Section -->
+  <div class="next-steps-section">
+    <h3 class="section-title">Next Steps</h3>
+    <div class="steps-container">
+      <div 
+        *ngFor="let step of nextSteps" 
+        class="step-card"
+        [class.active]="step.isActive"
+        [class.completed]="step.isCompleted">
+        <div class="step-header">
+          <div class="step-number">{{ step.id }}</div>
+          <div class="step-info">
+            <h4 class="step-title">{{ step.title }}</h4>
+            <p class="step-description">{{ step.description }}</p>
+          </div>
+          <div class="step-status">
+            <mat-icon *ngIf="step.isCompleted" class="completed-icon">check_circle</mat-icon>
+            <mat-icon *ngIf="step.isActive && !step.isCompleted" class="active-icon">radio_button_unchecked</mat-icon>
+            <mat-icon *ngIf="!step.isActive && !step.isCompleted" class="pending-icon">radio_button_unchecked</mat-icon>
+          </div>
+        </div>
+        <div class="step-action" *ngIf="step.isActive && step.action">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            class="action-btn"
+            (click)="performStepAction(step)">
+            {{ step.action }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alternate Option -->
+  <div class="alternate-section">
+    <div class="alternate-card">
+      <div class="alternate-icon">
+        <img [src]="alternateOption.icon" [alt]="alternateOption.title">
+      </div>
+      <div class="alternate-content">
+        <h4 class="alternate-title">{{ alternateOption.title }}</h4>
+        <p class="alternate-description">{{ alternateOption.description }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weather Widget -->
+  <app-weather-widget></app-weather-widget>
+
+  <!-- Expectations Widget -->
+  <app-expectations-widget></app-expectations-widget>
+
+  <!-- Rate Breakdown Modal -->
+  <app-rate-breakdown-modal
+    *ngIf="showRateBreakdownModal"
+    [rateBreakdown]="rateBreakdown"
+    (close)="closeRateBreakdownModal()">
+  </app-rate-breakdown-modal>
+</div>

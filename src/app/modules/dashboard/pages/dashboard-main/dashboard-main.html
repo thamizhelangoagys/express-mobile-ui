@@ -1,0 +1,108 @@
+<div class="dashboard-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-subtitle" *ngIf="currentUser">Welcome back, {{ currentUser.firstName }}!</p>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="loading-spinner">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+    <p class="loading-text">Loading dashboard...</p>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!isLoading" class="dashboard-content">
+    
+    <!-- Statistics Cards -->
+    <div class="stats-section">
+      <h3 class="section-title">Today's Overview</h3>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <mat-icon>login</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.totalCheckins }}</div>
+            <div class="stat-label">Total Check-ins</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <mat-icon>calendar_today</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.thisWeek }}</div>
+            <div class="stat-label">This Week</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+            <mat-icon>calendar_month</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.thisMonth }}</div>
+            <div class="stat-label">This Month</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+            <mat-icon>local_fire_department</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.currentStreak }}</div>
+            <div class="stat-label">Day Streak</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="actions-section">
+      <h3 class="section-title">Quick Actions</h3>
+      <div class="actions-grid">
+        <button 
+          *ngFor="let action of quickActions" 
+          class="action-card"
+          (click)="navigateTo(action.route)">
+          <div class="action-icon" [style.background]="action.color">
+            <mat-icon>{{ action.icon }}</mat-icon>
+          </div>
+          <div class="action-info">
+            <div class="action-title">{{ action.title }}</div>
+            <div class="action-description">{{ action.description }}</div>
+          </div>
+          <mat-icon class="action-arrow">arrow_forward_ios</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="activity-section">
+      <h3 class="section-title">Recent Activity</h3>
+      <div class="activity-list">
+        <div 
+          *ngFor="let activity of recentActivity" 
+          class="activity-item">
+          <div class="activity-icon" [style.background]="getActivityColor(activity.type)">
+            <mat-icon>{{ getActivityIcon(activity.type) }}</mat-icon>
+          </div>
+          <div class="activity-info">
+            <div class="activity-location">{{ activity.location }}</div>
+            <div class="activity-time">{{ activity.time }}</div>
+          </div>
+          <div class="activity-status">
+            <mat-icon class="status-icon">check_circle</mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

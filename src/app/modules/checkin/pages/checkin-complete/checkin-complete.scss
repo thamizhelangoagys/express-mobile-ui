@@ -1,0 +1,278 @@
+.checkin-complete-page {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding-bottom: 100px;
+}
+
+.success-section {
+  background: white;
+  padding: 24px 20px;
+  text-align: center;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.success-icon {
+  margin-bottom: 16px;
+}
+
+.success-icon mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #28a745;
+}
+
+.success-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.success-description {
+  font-size: 16px;
+  color: #6c757d;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.next-steps-section {
+  background: white;
+  margin: 16px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 20px 0;
+}
+
+.steps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.step-card {
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.step-card.active {
+  border-color: #1e3a8a;
+  background: #f8f9fa;
+}
+
+.step-card.completed {
+  border-color: #28a745;
+  background: #f8fff9;
+}
+
+.step-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e9ecef;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.step-card.active .step-number {
+  background: #1e3a8a;
+  color: white;
+}
+
+.step-card.completed .step-number {
+  background: #28a745;
+  color: white;
+}
+
+.step-info {
+  flex: 1;
+}
+
+.step-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 4px 0;
+}
+
+.step-description {
+  font-size: 14px;
+  color: #6c757d;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.step-status {
+  flex-shrink: 0;
+}
+
+.completed-icon {
+  color: #28a745;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.active-icon {
+  color: #1e3a8a;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.pending-icon {
+  color: #e9ecef;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.step-action {
+  margin-top: 12px;
+}
+
+.action-btn {
+  background: #1e3a8a !important;
+  color: white !important;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  text-transform: none;
+  letter-spacing: 0.3px;
+  padding: 8px 16px;
+}
+
+.action-btn:hover {
+  background: #1e40af !important;
+}
+
+.alternate-section {
+  margin: 16px;
+}
+
+.alternate-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.alternate-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alternate-icon img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.alternate-content {
+  flex: 1;
+}
+
+.alternate-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 4px 0;
+}
+
+.alternate-description {
+  font-size: 14px;
+  color: #6c757d;
+  margin: 0;
+  line-height: 1.4;
+}
+
+@media (max-width: 480px) {
+  .success-section {
+    padding: 20px 16px;
+  }
+
+  .success-title {
+    font-size: 20px;
+  }
+
+  .success-description {
+    font-size: 14px;
+  }
+
+  .next-steps-section {
+    margin: 12px;
+    padding: 16px;
+  }
+
+  .step-card {
+    padding: 12px;
+  }
+
+  .step-header {
+    gap: 8px;
+  }
+
+  .step-number {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .step-title {
+    font-size: 14px;
+  }
+
+  .step-description {
+    font-size: 13px;
+  }
+
+  .alternate-section {
+    margin: 12px;
+  }
+
+  .alternate-card {
+    padding: 16px;
+  }
+
+  .alternate-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .alternate-icon img {
+    width: 24px;
+    height: 24px;
+  }
+}

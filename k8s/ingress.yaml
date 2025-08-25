@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: express-mobile-checkin-ingress
+  namespace: express-mobile-checkin
+  labels:
+    app: express-mobile-checkin
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - express-mobile-checkin.example.com
+    secretName: express-mobile-checkin-tls
+  rules:
+  - host: express-mobile-checkin.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: express-mobile-checkin-service
+            port:
+              number: 80

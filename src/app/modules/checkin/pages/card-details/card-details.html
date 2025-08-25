@@ -1,0 +1,75 @@
+<div class="card-details-page">
+  <!-- Common Page Header Widget -->
+  <app-page-header-widget
+    pageTitle="Check-in"
+    roomType="Double Deluxe Room"
+    [bookingDetails]="bookingDetails"
+    (viewDetailsClicked)="viewRoomDetails()">
+  </app-page-header-widget>
+
+  <!-- Authorize Amount Card -->
+  <div class="authorize-card">
+    <div class="authorize-header">
+      <h2 class="section-title">Authorize amount</h2>
+      <button class="view-details-btn" (click)="showRateBreakdown()">
+        View Details
+      </button>
+    </div>
+    <div class="amount-display">
+      <span class="amount">$1440.00</span>
+    </div>
+  </div>
+
+  <!-- Card Details Section -->
+  <div class="card-details-section">
+    <div class="card-header">
+      <h2 class="section-title">Card details</h2>
+      <button class="new-card-btn" (click)="addNewCard()">
+        New Card
+      </button>
+    </div>
+    
+    <div class="card-options">
+      <div 
+        *ngFor="let card of paymentCards" 
+        class="card-option"
+        [class.selected]="card.selected"
+        (click)="selectCard(card)">
+        <mat-radio-button 
+          [value]="card.id" 
+          [checked]="card.selected"
+          (change)="selectCard(card)">
+        </mat-radio-button>
+        <div class="card-info">
+          <div class="card-logo">
+            <img [src]="getCardLogo(card.type)" [alt]="card.type">
+          </div>
+          <div class="card-text">
+            {{ getCardDisplayName(card.type) }} ending {{ card.lastFour }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complete Check-In Button -->
+  <div class="complete-section">
+    <button mat-raised-button color="primary" class="complete-btn" (click)="completeCheckin()">
+      Complete Check-In
+    </button>
+  </div>
+</div>
+
+<!-- Rate Breakdown Modal -->
+<app-rate-breakdown-modal
+  *ngIf="showRateBreakdownModal"
+  [rateBreakdown]="rateBreakdown"
+  (close)="closeRateBreakdownModal()">
+</app-rate-breakdown-modal>
+
+<!-- New Card Modal -->
+<app-new-card-modal
+  *ngIf="showNewCardModal"
+  (close)="closeNewCardModal()"
+  (addCard)="onAddNewCard($event)">
+</app-new-card-modal>
