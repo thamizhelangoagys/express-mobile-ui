@@ -56,7 +56,7 @@ export class CheckinDetails implements OnInit {
     nights: 3,
     guests: 3,
     tower: 'North tower',
-    roomImage: 'assets/hotel-room.svg',
+          roomImage: 'assets/room-image.svg',
     authorizationAmount: 1400.00,
     cardEnding: '5037',
     cardType: 'amex'

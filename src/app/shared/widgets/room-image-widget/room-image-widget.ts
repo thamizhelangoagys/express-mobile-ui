@@ -65,10 +65,15 @@ import { MatIconModule } from '@angular/material/icon';
   `]
 })
 export class RoomImageWidget {
-  @Input() imageSrc: string = 'assets/hotel-room.jpg';
+  @Input() imageSrc: string = 'assets/room-image.jpg';
   @Input() altText: string = 'Double Deluxe Room';
 
   onImageError(event: any): void {
-    event.target.style.display = 'none';
+    // Fallback to SVG if JPG fails to load
+    if (event.target.src && !event.target.src.includes('.svg')) {
+      event.target.src = 'assets/room-image.svg';
+    } else {
+      event.target.style.display = 'none';
+    }
   }
 }

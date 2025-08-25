@@ -35,7 +35,7 @@ export class PageBuilderService {
             type: 'room-image',
             order: 1,
             config: {
-              imageSrc: 'assets/hotel-room.svg',
+              imageSrc: 'assets/room-image.svg',
               altText: 'Double Deluxe Room'
             }
           },
@@ -157,7 +157,7 @@ export class PageBuilderService {
             type: 'room-image',
             order: 1,
             config: {
-              imageSrc: 'assets/hotel-room.jpg',
+              imageSrc: 'assets/room-image.jpg',
               altText: 'Welcome to ALPHA Hotel'
             }
           },
